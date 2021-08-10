@@ -17,6 +17,7 @@ void EV3::receiveEvent(int DataNum)
 	{
 		receiveBuff[i] = Wire.read();
 	}
+	Wire.write((uint8_t)true);
 }
 
 // データの送信を要求が来た時に実行する関数
