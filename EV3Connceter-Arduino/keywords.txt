@@ -1,5 +1,0 @@
-requestEvent KEYWORD2
-check KEYWORD2
-initI2CPort KEYWORD2
-sendItems KEYWORD2
-setFunc KEYWORD2
