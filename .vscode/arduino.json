@@ -1,0 +1,5 @@
+{
+    "board": "arduino:avr:uno",
+    "sketch": "EV3Connceter-Arduino\\examples\\EV3Connect\\EV3Connect.ino",
+    "programmer": "arduino:arduinoisp"
+}

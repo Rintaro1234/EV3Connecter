@@ -1,54 +1,124 @@
 #include "EV3Connecter.h"
 
-uint8_t EV3::funcAdd; // EV3からの実行命令
-uint8_t EV3::numFunc = 10; // 関数の数
-uint8_t EV3::buffsize = 32; // 受信バッファのサイズ
-uint8_t *EV3::receiveBuff; // 受信バッファのポインタ
-bool EV3::connected = false;
-data_t *EV3::data;
+uint8_t* EV3::receiveBuff;
+uint8_t* EV3::sendBuff;
+int EV3::receivePoint;
+int EV3::sendPoint;
+int EV3::availableBytes;
 
-// 自身のアドレスが呼ばれた時に実行する関数
+/*---------バックグラウンド処理---------*/
 void EV3::receiveEvent(int DataNum)
 {
-	connected = true;
-	funcAdd = Wire.read();
-	DataNum--;
-	for(int i = 0; i< DataNum; i++)
-	{
-		receiveBuff[i] = Wire.read();
-	}
-	Wire.write((uint8_t)true);
+    availableBytes = DataNum;
+    for(int i= 0; i < DataNum; i++) receiveBuff[i] = Wire.read();
 }
 
-// データの送信を要求が来た時に実行する関数
 void EV3::requestEvent()
 {
-	data_t d;
-	for(int i = 0; i < numFunc; i++)
-	{
-		if(data[i].address == funcAdd)
-		{
-			d = data[i];
-			break;
-		}
-	}
-	for(int i = 0; i < d.size; i++)
-	{
-		Wire.write(d.data[i]);
-	}
+    Wire.write(sendBuff, sendPoint);
 }
 
-bool EV3::begin()
+/*---------機能---------*/
+
+int EV3::begin(int size)
 {
-	Wire.begin(MyAddress);
-	// メモリ確保
-	receiveBuff = (uint8_t *)malloc(sizeof(uint8_t) * buffsize);
-	data = (data_t *)malloc(sizeof(data_t) * numFunc);
+    int isConnected = -1;
+    // 初期化
+    buffSize = size;
+    receiveBuff = (uint8_t*)malloc(sizeof(uint8_t) * buffSize); // 受信バッファ
+    sendBuff    = (uint8_t*)malloc(sizeof(uint8_t) * buffSize); // 送信バッファ
+    // ポート開放
+    Wire.begin(myAddress);
+    Wire.onReceive(receiveEvent);
+    Wire.onRequest(requestEvent);
 
-	Wire.onReceive(receiveEvent); // 自身のアドレスが呼ばれた時に実行する関数
-	Wire.onRequest(requestEvent); // データの送信を要求が来た時に実行する関数
+    this->clearSendBuff();
+    this->clearReceiveBuff();
 
-	// 繋がったかチェック
-	while(!connected){delay(10);}
-	return connected;
+    return isConnected;
+}
+
+/*---------読み込み---------*/
+
+int EV3::readInt()
+{
+    int buff;
+    buff = *(int *)receiveBuff[receivePoint];
+    receivePoint += sizeof(int);
+    return buff;
+}
+
+float EV3::readFloat()
+{
+    float buff;
+    buff = *(float *)receiveBuff[receivePoint];
+    receivePoint += sizeof(float);
+    return buff;
+}
+
+double EV3::readDouble()
+{
+    double buff;
+    buff = *(double *)receiveBuff[receivePoint];
+    receivePoint += sizeof(double);
+    return buff;
+}
+
+uint8_t EV3::readByte()
+{
+    uint8_t buff;
+    buff = *(uint8_t *)receiveBuff[receivePoint];
+    receivePoint += sizeof(uint8_t);
+    return buff;
+}
+
+void EV3::clearReceiveBuff()
+{
+    receivePoint = 0;
+    availableBytes = 0;
+    memset(receiveBuff, 0, sizeof(uint8_t) * buffSize);
+}
+
+/*---------書き込み---------*/
+
+int EV3::sentInt(int val)
+{
+    int isSuccess = -1;
+    *(int *)&sendBuff[sendPoint] = val;
+    sendPoint += sizeof(int);
+    if(sendPoint <= buffSize) isSuccess = 1;
+    return isSuccess;
+}
+
+int EV3::sentFloat(float val)
+{
+    int isSuccess = -1;
+    *(float *)&sendBuff[sendPoint] = val;
+    sendPoint += sizeof(float);
+    if(sendPoint <= buffSize) isSuccess = 1;
+    return isSuccess;
+}
+
+int EV3::sentDouble(double val)
+{
+    double isSuccess = -1;
+    *(double *)&sendBuff[sendPoint] = val;
+    sendPoint += sizeof(double);
+    if(sendPoint <= buffSize) isSuccess = 1;
+    return isSuccess;
+}
+
+int EV3::sentByte(uint8_t val)
+{
+    int isSuccess = -1;
+    *(uint8_t *)&sendBuff[sendPoint] = val;
+    sendPoint += sizeof(uint8_t);
+    if(sendPoint <= buffSize) isSuccess = 1;
+    return isSuccess;
+}
+
+void EV3::clearSendBuff()
+{
+    sendPoint = 0;
+    memset(sendBuff, 0, sizeof(uint8_t) * buffSize);
 }
