@@ -11,7 +11,7 @@ private:
     static uint8_t *sendBuff;
     static int receivePoint;
     static int sendPoint;
-    int buffSize = 32;
+    static int buffSize;
     static int availableBytes;
     static void receiveEvent(int DataNum);
     static void requestEvent();
@@ -22,13 +22,16 @@ public:
     float readFloat();
     double readDouble();
     uint8_t readByte();
+    uint8_t readReceiveBuff(uint8_t address);
+    uint8_t readTask(){ return receiveBuff[0]; }
     void clearReceiveBuff();
     int available(){ return availableBytes - receivePoint;};
     // 送信
-    int sentInt(int val);
-    int sentFloat(float val);
-    int sentDouble(double val);
-    int sentByte(uint8_t val);
+    int sendInt(int val);
+    int sendFloat(float val);
+    int sendDouble(double val);
+    int sendByte(uint8_t val);
+    uint8_t EV3::readSendBuff(uint8_t address);
     void clearSendBuff();
 
     // デストラクタ

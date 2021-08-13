@@ -5,17 +5,20 @@ uint8_t* EV3::sendBuff;
 int EV3::receivePoint;
 int EV3::sendPoint;
 int EV3::availableBytes;
+int EV3::buffSize;
 
 /*---------バックグラウンド処理---------*/
 void EV3::receiveEvent(int DataNum)
 {
     availableBytes = DataNum;
     for(int i= 0; i < DataNum; i++) receiveBuff[i] = Wire.read();
+    Serial.println("Called");
 }
 
 void EV3::requestEvent()
 {
-    Wire.write(sendBuff, sendPoint);
+    Wire.write(sendBuff, buffSize);
+    Serial.println("Requested");
 }
 
 /*---------機能---------*/
@@ -72,16 +75,21 @@ uint8_t EV3::readByte()
     return buff;
 }
 
+uint8_t EV3::readReceiveBuff(uint8_t address)
+{
+    return receiveBuff[address];
+}
+
 void EV3::clearReceiveBuff()
 {
-    receivePoint = 0;
+    receivePoint = 1;
     availableBytes = 0;
     memset(receiveBuff, 0, sizeof(uint8_t) * buffSize);
 }
 
 /*---------書き込み---------*/
 
-int EV3::sentInt(int val)
+int EV3::sendInt(int val)
 {
     int isSuccess = -1;
     *(int *)&sendBuff[sendPoint] = val;
@@ -90,7 +98,7 @@ int EV3::sentInt(int val)
     return isSuccess;
 }
 
-int EV3::sentFloat(float val)
+int EV3::sendFloat(float val)
 {
     int isSuccess = -1;
     *(float *)&sendBuff[sendPoint] = val;
@@ -99,7 +107,7 @@ int EV3::sentFloat(float val)
     return isSuccess;
 }
 
-int EV3::sentDouble(double val)
+int EV3::sendDouble(double val)
 {
     double isSuccess = -1;
     *(double *)&sendBuff[sendPoint] = val;
@@ -108,13 +116,18 @@ int EV3::sentDouble(double val)
     return isSuccess;
 }
 
-int EV3::sentByte(uint8_t val)
+int EV3::sendByte(uint8_t val)
 {
     int isSuccess = -1;
     *(uint8_t *)&sendBuff[sendPoint] = val;
     sendPoint += sizeof(uint8_t);
     if(sendPoint <= buffSize) isSuccess = 1;
     return isSuccess;
+}
+
+uint8_t EV3::readSendBuff(uint8_t address)
+{
+    return sendBuff[address];
 }
 
 void EV3::clearSendBuff()
