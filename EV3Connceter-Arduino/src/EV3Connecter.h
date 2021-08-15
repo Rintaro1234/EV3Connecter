@@ -20,7 +20,6 @@ public:
     // 読み込み
     int readInt();
     float readFloat();
-    double readDouble();
     uint8_t readByte();
     uint8_t readReceiveBuff(uint8_t address);
     uint8_t readTask(){ return receiveBuff[0]; }
@@ -29,9 +28,9 @@ public:
     // 送信
     int sendInt(int val);
     int sendFloat(float val);
-    int sendDouble(double val);
     int sendByte(uint8_t val);
-    uint8_t EV3::readSendBuff(uint8_t address);
+    uint8_t EV3::readSendBuff(uint8_t address){ return sendBuff[address]; }
+    void endTransmission(){ sendBuff[0] = 0x01; }
     void clearSendBuff();
 
     // デストラクタ

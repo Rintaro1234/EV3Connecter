@@ -17,7 +17,13 @@ void EV3::receiveEvent(int DataNum)
 
 void EV3::requestEvent()
 {
-    Wire.write(sendBuff, buffSize);
+    if(receiveBuff[0] == 0x00)
+    {
+        Wire.write((uint8_t*)&buffSize, sizeof(int));
+        Serial.println("RequestBuffSize");
+    }else{
+        Wire.write(sendBuff, buffSize);
+    }
     Serial.println("Requested");
 }
 
@@ -56,14 +62,6 @@ float EV3::readFloat()
     float buff;
     buff = *(float *)receiveBuff[receivePoint];
     receivePoint += sizeof(float);
-    return buff;
-}
-
-double EV3::readDouble()
-{
-    double buff;
-    buff = *(double *)receiveBuff[receivePoint];
-    receivePoint += sizeof(double);
     return buff;
 }
 
@@ -107,15 +105,6 @@ int EV3::sendFloat(float val)
     return isSuccess;
 }
 
-int EV3::sendDouble(double val)
-{
-    double isSuccess = -1;
-    *(double *)&sendBuff[sendPoint] = val;
-    sendPoint += sizeof(double);
-    if(sendPoint <= buffSize) isSuccess = 1;
-    return isSuccess;
-}
-
 int EV3::sendByte(uint8_t val)
 {
     int isSuccess = -1;
@@ -125,13 +114,9 @@ int EV3::sendByte(uint8_t val)
     return isSuccess;
 }
 
-uint8_t EV3::readSendBuff(uint8_t address)
-{
-    return sendBuff[address];
-}
-
 void EV3::clearSendBuff()
 {
-    sendPoint = 0;
+    sendPoint = 1;
     memset(sendBuff, 0, sizeof(uint8_t) * buffSize);
+    sendBuff[0] = 0x01;
 }

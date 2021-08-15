@@ -16,12 +16,12 @@ int Arduino::begin(tSensors port)
     return buffSize;
 }
 
-int requestData(bool isSync)
+int Arduino::requestData(bool isSync)
 {
     return 0;
 }
 
-int sendData()
+int Arduino::sendData()
 {
     return 0;
 }

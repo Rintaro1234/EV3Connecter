@@ -5,17 +5,16 @@ EV3 ev3;
 
 void setup()
 {
+    Serial.begin(9600);
     ev3.begin(32);
     ev3.clearSendBuff();
-    Serial.begin(9600);
     int a = 1024;
     ev3.sendInt(a);
     uint8_t b = 255;
     ev3.sendByte(b);
     float c = 3.14;
     ev3.sendFloat(c);
-    double d = 3.141592654;
-    ev3.sendDouble(d);
+    ev3.endTransmission();
 
     char read[32];
     for(int i = 0; i < 32; i++)
