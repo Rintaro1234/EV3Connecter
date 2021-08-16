@@ -74,8 +74,9 @@ int requestData(bool isSync)
 	clearReceiveBuff();
 	do{
 		readI2CReply(port, receiveBuff, 32);
-		wait1Msec(100);
+		displayBigTextLine(6*2, "%d", receiveBuff[0]);
 		if(!isSync) break;
+		wait1Msec(100);
 	}while(receiveBuff[0] == 0x00);
   return 0;
 }

@@ -20,3 +20,6 @@ int sentFloat(float val) float型を受け取ってそれを送信バッファ�
 int sentDouble(double val) double型を受け取ってそれを送信バッファに入れる
 int sentByte(uint8_t val) uint8_t型を受け取ってそれを送信バッファに入れる
 void clearSendBuff() 送信バッファの中身を削除する
+
+-注意！-
+clerSendBuff->endTransmission間は重い処理禁止
