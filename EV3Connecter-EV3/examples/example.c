@@ -13,12 +13,12 @@ task main()
 		int b = readInt();
 		char c = readByte();
 		float d = readFloat();
-		eraseDisplay();
+
 		displayBigTextLine(0*2, "%d", a);
 		displayBigTextLine(1*2, "%d", b);
 		displayBigTextLine(2*2, "%d", c);
 		displayBigTextLine(3*2, "%lf", d);
-
 		wait1Msec(100);
+		eraseDisplay();
 	}
 }

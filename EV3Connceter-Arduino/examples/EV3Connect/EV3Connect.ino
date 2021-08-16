@@ -30,9 +30,9 @@ void setup()
 void loop()
 {
   static int a = 0;
+  delay(500);
   ev3.clearSendBuff();
   ev3.sendInt(a);
   ev3.endTransmission();
   a++;
-  delay(500);
 }
