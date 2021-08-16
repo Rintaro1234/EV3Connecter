@@ -30,9 +30,17 @@ void setup()
 void loop()
 {
   static int a = 0;
-  delay(500);
   ev3.clearSendBuff();
   ev3.sendInt(a);
   ev3.endTransmission();
   a++;
+
+  ev3.resetReceivePointer();
+  byte b = ev3.readByte();
+  int e = ev3.readInt();
+  Serial.println(b);
+  Serial.println(e);
+  Serial.println("-^-^-^-^-^-^-^-^-^-^-^-");
+
+  delay(500);
 }
