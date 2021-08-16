@@ -29,4 +29,10 @@ void setup()
 
 void loop()
 {
+  static int a = 0;
+  ev3.clearSendBuff();
+  ev3.sendInt(a);
+  ev3.endTransmission();
+  a++;
+  delay(500);
 }

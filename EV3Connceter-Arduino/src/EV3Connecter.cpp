@@ -12,7 +12,6 @@ void EV3::receiveEvent(int DataNum)
 {
     availableBytes = DataNum;
     for(int i= 0; i < DataNum; i++) receiveBuff[i] = Wire.read();
-    Serial.println("Called");
 }
 
 void EV3::requestEvent()
@@ -20,11 +19,9 @@ void EV3::requestEvent()
     if(receiveBuff[0] == 0x00)
     {
         Wire.write((uint8_t*)&buffSize, sizeof(int));
-        Serial.println("RequestBuffSize");
     }else{
         Wire.write(sendBuff, buffSize);
     }
-    Serial.println("Requested");
 }
 
 /*---------機能---------*/
@@ -118,5 +115,5 @@ void EV3::clearSendBuff()
 {
     sendPoint = 1;
     memset(sendBuff, 0, sizeof(uint8_t) * buffSize);
-    sendBuff[0] = 0x01;
+    sendBuff[0] = 0x00;
 }
