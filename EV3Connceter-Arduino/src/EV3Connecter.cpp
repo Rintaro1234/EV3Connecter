@@ -10,12 +10,20 @@ int EV3::buffSize;
 /*---------バックグラウンド処理---------*/
 void EV3::receiveEvent(int DataNum)
 {
+    receivePoint = 0;
     availableBytes = DataNum;
-    for(int i= 0; i < DataNum; i++) receiveBuff[i] = Wire.read();
+    int i = 0;
+    for(int i = 0; i < 32; i++) {receiveBuff[i] = Wire.read();}
+    Serial.print(DataNum);
+    Serial.println("CALLHERE");
+    while(Wire.available()) Wire.read();
+    uint8_t isFinish = 0x01;
+    Wire.write(&isFinish, 1);
 }
 
 void EV3::requestEvent()
 {
+    
     if(receiveBuff[0] == 0x00)
     {
         Wire.write((uint8_t*)&buffSize, sizeof(int));
@@ -49,7 +57,7 @@ int EV3::begin(int size)
 int EV3::readInt()
 {
     int buff;
-    buff = *(int *)receiveBuff[receivePoint];
+    buff = *(int *)&receiveBuff[receivePoint];
     receivePoint += sizeof(int);
     return buff;
 }
@@ -57,7 +65,7 @@ int EV3::readInt()
 float EV3::readFloat()
 {
     float buff;
-    buff = *(float *)receiveBuff[receivePoint];
+    buff = *(float *)&receiveBuff[receivePoint];
     receivePoint += sizeof(float);
     return buff;
 }
@@ -65,19 +73,14 @@ float EV3::readFloat()
 uint8_t EV3::readByte()
 {
     uint8_t buff;
-    buff = *(uint8_t *)receiveBuff[receivePoint];
+    buff = *(uint8_t *)&receiveBuff[receivePoint];
     receivePoint += sizeof(uint8_t);
     return buff;
 }
 
-uint8_t EV3::readReceiveBuff(uint8_t address)
-{
-    return receiveBuff[address];
-}
-
 void EV3::clearReceiveBuff()
 {
-    receivePoint = 1;
+    receivePoint = 0;
     availableBytes = 0;
     memset(receiveBuff, 0, sizeof(uint8_t) * buffSize);
 }

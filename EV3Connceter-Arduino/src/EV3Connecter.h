@@ -21,9 +21,9 @@ public:
     int readInt();
     float readFloat();
     uint8_t readByte();
-    uint8_t readReceiveBuff(uint8_t address);
-    uint8_t readTask(){ return receiveBuff[0]; }
+    uint8_t readReceiveBuff(uint8_t address) {return receiveBuff[address]; };
     void clearReceiveBuff();
+    void resetReceivePointer(){ receivePoint = 0;}
     int available(){ return availableBytes - receivePoint;};
     // 送信
     int sendInt(int val);
