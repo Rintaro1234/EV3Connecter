@@ -15,9 +15,9 @@ void clearReceiveBuff() 受信バッファの中身を削除する
 void resetReceivePointer() 受信バッファの中身を変えずにレシーブバッファポインタを最初に戻す
 
 書き込み
-int sentInt(int val) int型を受け取ってそれを送信バッファに入れる
-int sentFloat(float val) float型を受け取ってそれを送信バッファに入れる -Doubleと共用可-
-int sentByte(uint8_t val) uint8_t型を受け取ってそれを送信バッファに入れる
+int setInt(int val) int型を受け取ってそれを送信バッファに入れる
+int setFloat(float val) float型を受け取ってそれを送信バッファに入れる -Doubleと共用可-
+int setByte(uint8_t val) uint8_t型を受け取ってそれを送信バッファに入れる
 void beginTransmission() 送信バッファの中身を削除し、書き込みが始まることを示す
 void endTransmission() 送信バッファの書き込み終了を示す
 uint8_t readSendBuff(uint8_t address) 送信バッファの中身をアドレスを指定して表示
@@ -36,6 +36,3 @@ ev3.clearReceiveBuff() 前回の受信データを残したいときはev3.reset
 int val = ev3.readInt();
 ...;
 ...;
-
--注意！-
-clerSendBuff<->endTransmission間は重い処理禁止
