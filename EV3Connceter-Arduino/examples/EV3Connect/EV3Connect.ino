@@ -1,5 +1,4 @@
-#include <C:\Users\rinna\Documents\C\ev3dev\EV3Connecter\EV3Connceter-Arduino\src\EV3Connecter.h>
-#include <C:\Users\rinna\Documents\C\ev3dev\EV3Connecter\EV3Connceter-Arduino\src\EV3Connecter.cpp>
+#include <EV3Connecter.h>
 
 EV3 ev3;
 
