@@ -24,13 +24,13 @@ public:
     uint8_t readReceiveBuff(uint8_t address) {return receiveBuff[address]; };
     void clearReceiveBuff();
     void resetReceivePointer(){ receivePoint = 0;}
-    int available(){ return availableBytes - receivePoint;};
     // 送信
-    int sendInt(int val);
-    int sendFloat(float val);
-    int sendByte(uint8_t val);
-    uint8_t EV3::readSendBuff(uint8_t address){ return sendBuff[address]; }
+    int setInt(int val);
+    int setFloat(float val);
+    int setByte(uint8_t val);
+    uint8_t readSendBuff(uint8_t address){ return sendBuff[address]; }
     void endTransmission(){ sendBuff[0] = 0x01; }
+    void beginTransmission(){clearSendBuff();}
     void clearSendBuff();
 
     // デストラクタ
