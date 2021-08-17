@@ -7,40 +7,34 @@ void setup()
 {
     Serial.begin(9600);
     ev3.begin(32);
-    ev3.clearSendBuff();
-    int a = 1024;
-    ev3.sendInt(a);
-    uint8_t b = 255;
-    ev3.sendByte(b);
-    float c = 3.14;
-    ev3.sendFloat(c);
-    ev3.endTransmission();
-
-    char read[32];
-    for(int i = 0; i < 32; i++)
-    {
-      memset(read, '0', 32);
-      String buff = String(ev3.readSendBuff(i), HEX);
-      sprintf(read, "%2d: 0x%s\n", i, buff.c_str());
-      Serial.print(read);
-    }
-    Serial.println("-------------------------------------");
+    pinMode(13, OUTPUT);
 }
 
 void loop()
 {
   static int a = 0;
-  ev3.clearSendBuff();
-  ev3.sendInt(a);
+  ev3.beginTransmission();
+  ev3.setInt(a);
   ev3.endTransmission();
   a++;
 
   ev3.resetReceivePointer();
   byte b = ev3.readByte();
   int e = ev3.readInt();
+
+  switch(b){
+    case 0x10:
+      digitalWrite(13, LOW);
+    break;
+    case 0x11:
+      digitalWrite(13, HIGH);
+    break;
+    default:
+    break;
+  }
+
   Serial.println(b);
   Serial.println(e);
-  Serial.println("-^-^-^-^-^-^-^-^-^-^-^-");
 
   delay(500);
 }

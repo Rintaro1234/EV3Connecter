@@ -87,7 +87,7 @@ void EV3::clearReceiveBuff()
 
 /*---------書き込み---------*/
 
-int EV3::sendInt(int val)
+int EV3::setInt(int val)
 {
     int isSuccess = -1;
     *(int *)&sendBuff[sendPoint] = val;
@@ -96,7 +96,7 @@ int EV3::sendInt(int val)
     return isSuccess;
 }
 
-int EV3::sendFloat(float val)
+int EV3::setFloat(float val)
 {
     int isSuccess = -1;
     *(float *)&sendBuff[sendPoint] = val;
@@ -105,7 +105,7 @@ int EV3::sendFloat(float val)
     return isSuccess;
 }
 
-int EV3::sendByte(uint8_t val)
+int EV3::setByte(uint8_t val)
 {
     int isSuccess = -1;
     *(uint8_t *)&sendBuff[sendPoint] = val;

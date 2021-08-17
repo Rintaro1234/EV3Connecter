@@ -117,12 +117,6 @@ byte readByte()
 	return a.val;
 }
 
-// -DEBUG- readReceiveBuffer
-int readInt(int address)
-{
-	return receiveBuff[address];
-}
-
 // -DEBUG- copy ReceiveBuffer to *data
 void copyReceiveBuff(char *data)
 {
@@ -130,7 +124,7 @@ void copyReceiveBuff(char *data)
 }
 
 // send ByteData to Arduino
-void sendByte(byte val)
+void setByte(byte val)
 {
 	char *valp = &val;
 	sendBuff[sendPoint+0] = valp[0];
@@ -138,7 +132,7 @@ void sendByte(byte val)
 }
 
 // send IntegerData to Arduino !Int of Arduino is 2byte. so you have to round between -32768 and 32767!
-void sendInt(int val)
+void setInt(int val)
 {
 	char *valp = &val;
 	sendBuff[sendPoint+0] = valp[0];
@@ -147,7 +141,7 @@ void sendInt(int val)
 }
 
 // send FloatData to Arduino
-void sendFloat(float val)
+void setFloat(float val)
 {
 	char *valp = &val;
 	sendBuff[sendPoint+0] = valp[0];
@@ -166,7 +160,7 @@ int sendData()
 		checkI2C();
 		readI2CReply(port, &isFinish, 32);
 	}while(isFinish != 0x01);
-  return 0;
+  return isFinish;
 }
 
 // -DEBUG- copy SendBuffer to *data
