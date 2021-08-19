@@ -15,7 +15,7 @@ void EV3::receiveEvent(int DataNum)
     int i = 0;
     for(int i = 0; i < 32; i++) {receiveBuff[i] = Wire.read();}
     Serial.print(DataNum);
-    Serial.println("CALLHERE");
+    Serial.println("receive!");
     while(Wire.available()) Wire.read();
     uint8_t isFinish = 0x01;
     Wire.write(&isFinish, 1);
@@ -23,7 +23,7 @@ void EV3::receiveEvent(int DataNum)
 
 void EV3::requestEvent()
 {
-    
+    Serial.println("request!");
     if(receiveBuff[0] == 0x00)
     {
         Wire.write((uint8_t*)&buffSize, sizeof(int));

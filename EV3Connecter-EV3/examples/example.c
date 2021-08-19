@@ -23,11 +23,11 @@ task main()
 			break;
 		}
 
-		int f = 10234;
 		clearSendBuff();
-		sendByte(e);
-		sendInt(f);
+		setByte(e);
 		sendData();
+
+		//wait1Msec(500);
 
 	}
 }

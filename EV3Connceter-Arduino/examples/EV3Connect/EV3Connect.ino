@@ -19,7 +19,6 @@ void loop()
 
   ev3.resetReceivePointer();
   byte b = ev3.readByte();
-  int e = ev3.readInt();
 
   switch(b){
     case 0x10:
@@ -33,7 +32,6 @@ void loop()
   }
 
   Serial.println(b);
-  Serial.println(e);
 
   delay(500);
 }

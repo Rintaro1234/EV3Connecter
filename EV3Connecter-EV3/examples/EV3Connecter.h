@@ -24,6 +24,7 @@ char receiveBuff[32]; // Buffer of Items from Arduino
 char sendBuff[32]; // Buffer of Items to send to Arduino
 int receivePoint; // Pointer Of ReceiveBuff
 int sendPoint; // Pointer Of SendBuff
+int bufferSize;
 tSensors port; // The port attached Arduino
 
 // The function to clear ReceiveBuffer
@@ -67,20 +68,21 @@ int begin(tSensors val)
     buffSize.val = 0;
     buffSize.bits[0] = RBuf[0];
     buffSize.bits[1] = RBuf[1];
-    return buffSize.val;
+    bufferSize = buffSize.val;
+    return bufferSize;
 }
 
 // request ArduinoData
 int requestData(bool isSync)
 {
 	clearReceiveBuff();
+	char call[2] = {1, 0x0A << 1};
 	do{
-		char a[2] = {1, 0x0A << 1};
-		sendI2CMsg(port, a, 32);
+		sendI2CMsg(port, call, 32);
 		checkI2C();
 		readI2CReply(port, receiveBuff, 32);
+		wait1Msec(50);
 		if(!isSync) break;
-		wait1Msec(100);
 	}while(receiveBuff[0] == 0x00);
   return 0;
 }
@@ -126,6 +128,7 @@ void copyReceiveBuff(char *data)
 // send ByteData to Arduino
 void setByte(byte val)
 {
+	if(bufferSize < (sendPoint + 1)) return;
 	char *valp = &val;
 	sendBuff[sendPoint+0] = valp[0];
 	sendPoint += 1;
@@ -134,6 +137,7 @@ void setByte(byte val)
 // send IntegerData to Arduino !Int of Arduino is 2byte. so you have to round between -32768 and 32767!
 void setInt(int val)
 {
+	if(bufferSize < (sendPoint + 2)) return;
 	char *valp = &val;
 	sendBuff[sendPoint+0] = valp[0];
 	sendBuff[sendPoint+1] = valp[1];
@@ -143,6 +147,7 @@ void setInt(int val)
 // send FloatData to Arduino
 void setFloat(float val)
 {
+	if(bufferSize < (sendPoint + 4)) return;
 	char *valp = &val;
 	sendBuff[sendPoint+0] = valp[0];
 	sendBuff[sendPoint+1] = valp[1];
@@ -159,6 +164,7 @@ int sendData()
 		sendI2CMsg(port, sendBuff, 32);
 		checkI2C();
 		readI2CReply(port, &isFinish, 32);
+		wait1Msec(50);
 	}while(isFinish != 0x01);
   return isFinish;
 }
