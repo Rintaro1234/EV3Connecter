@@ -46,7 +46,7 @@ void clearSendBuff()
 void checkI2C()
 {
 	clearTimer(T1);
-	while(nI2CStatus[port]!=0){if(time1[T1] > 500) break;}
+	while(nI2CStatus[port]==STAT_COMM_PENDING)){if(time1[T1] > 500) break;}
 }
 
 // start Conennting to Arduino
@@ -60,6 +60,7 @@ int begin(tSensors val)
 		// Request ArduinoBufferSize
     char WBuf[3] = {2, slaveAddress << 1, requestBuffSize};
     char RBuf[2];
+    checkI2C();
     sendI2CMsg(port, WBuf, 32);
     checkI2C();
     readI2CReply(port, RBuf, 32);
@@ -76,6 +77,7 @@ int requestData(bool isSync)
 	clearReceiveBuff();
 	do{
 		char a[2] = {1, 0x0A << 1};
+		checkI2C();
 		sendI2CMsg(port, a, 32);
 		checkI2C();
 		readI2CReply(port, receiveBuff, 32);
@@ -156,6 +158,7 @@ int sendData()
 {
 	char isFinish = 0;
 	do{
+		checkI2C();
 		sendI2CMsg(port, sendBuff, 32);
 		checkI2C();
 		readI2CReply(port, &isFinish, 32);
